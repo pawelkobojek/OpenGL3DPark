@@ -11,6 +11,7 @@
 		40895FCB1BD8228200907A4A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCA1BD8228200907A4A /* OpenGL.framework */; };
 		40895FCD1BD8232600907A4A /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */; };
 		40895FD11BD8251F00907A4A /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */; };
+		40A08CA81BDA34E5002E1E7F /* compiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40A08CA71BDA34E5002E1E7F /* compiler.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		40895FCA1BD8228200907A4A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.12.0.dylib; path = ../../../../../usr/local/Cellar/glew/1.12.0/lib/libGLEW.1.12.0.dylib; sourceTree = "<group>"; };
 		40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = ../../../../../usr/local/Cellar/glfw3/3.1.1/lib/libglfw3.3.1.dylib; sourceTree = "<group>"; };
+		40A08CA51BDA34B6002E1E7F /* compiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
+		40A08CA71BDA34E5002E1E7F /* compiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compiler.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,9 +72,19 @@
 		40895FC21BD821A400907A4A /* GK3d */ = {
 			isa = PBXGroup;
 			children = (
+				40A08CA61BDA34BE002E1E7F /* glsl */,
 				40895FC31BD821A400907A4A /* main.cpp */,
 			);
 			path = GK3d;
+			sourceTree = "<group>";
+		};
+		40A08CA61BDA34BE002E1E7F /* glsl */ = {
+			isa = PBXGroup;
+			children = (
+				40A08CA51BDA34B6002E1E7F /* compiler.h */,
+				40A08CA71BDA34E5002E1E7F /* compiler.cpp */,
+			);
+			name = glsl;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,6 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40A08CA81BDA34E5002E1E7F /* compiler.cpp in Sources */,
 				40895FC41BD821A400907A4A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,6 +287,7 @@
 				40895FC91BD821A400907A4A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
