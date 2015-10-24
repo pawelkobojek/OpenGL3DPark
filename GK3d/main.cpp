@@ -12,6 +12,10 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "shader.hpp"
 
 void render(GLuint VAO, Shader shader) {
@@ -21,6 +25,18 @@ void render(GLuint VAO, Shader shader) {
     shader.use();
     
     glBindVertexArray(VAO);
+    glm::mat4 trans;
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans = glm::rotate(trans, glm::radians((GLfloat) glfwGetTime() * 50.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    GLuint transformLocation = glGetUniformLocation(shader.program, "transform");
+    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    
+    glm::mat4 trans2;
+    trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
+    trans2 = glm::scale(trans2, glm::vec3(sin((GLfloat) glfwGetTime()), sin((GLfloat) glfwGetTime()),  0.0f));
+    transformLocation = glGetUniformLocation(shader.program, "transform");
+    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans2));
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
 }
