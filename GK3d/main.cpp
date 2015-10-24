@@ -26,8 +26,20 @@ void render(GLuint VAO, Shader shader) {
     
     glm::mat4 model;
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 view;
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+    
+    GLfloat radius = 10.0f;
+    glm::vec3 cameraPos = glm::vec3(sin(glfwGetTime()) * radius, 0.0f, cos(glfwGetTime()) * radius);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+    glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
+    glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, cameraUp);
+//    glm::mat4 view = glm::lookAt(glm::vec3(sin(glfwGetTime()) * radius, 0.0f, cos(glfwGetTime()) * radius),
+//                       glm::vec3(0.0f, 0.0f, 0.0f),
+//                       glm::vec3(0.0f, 1.0f, 0.0f));
+    
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, 0.1f, 100.0f);
     
