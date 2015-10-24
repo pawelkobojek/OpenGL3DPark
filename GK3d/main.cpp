@@ -18,6 +18,85 @@
 
 #include "shader.hpp"
 
+const GLuint WIDTH = 800, HEIGHT = 600;
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+bool keys[1024];
+bool firstMouse = true;
+GLfloat lastX = WIDTH / 2;
+GLfloat lastY = HEIGHT / 2;
+GLfloat yaw = -90.0f;
+GLfloat pitch = 0.0f;
+
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+
+void do_movement() {
+    GLfloat cameraSpeed = 5.0f * deltaTime;
+    if(keys[GLFW_KEY_W]) {
+        cameraPos += cameraSpeed * cameraFront;
+    }
+    if(keys[GLFW_KEY_S]) {
+        cameraPos -= cameraSpeed * cameraFront;
+    }
+    if(keys[GLFW_KEY_A]) {
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+    if(keys[GLFW_KEY_D]) {
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+    // Window should close if user pressed ESC key
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+    if(key >= 0 && key < 1024) {
+        if(action == GLFW_PRESS) {
+            keys[key] = true;
+        } else if(action == GLFW_RELEASE) {
+            keys[key] = false;
+        }
+    }
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    if(firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    
+    GLfloat xOffset = xpos - lastX;
+    GLfloat yOffset = lastY - ypos; // reversed, since y is from bottom to top
+    lastX = xpos;
+    lastY = ypos;
+    
+    GLfloat sensitivity = 0.15f;
+    xOffset *= sensitivity;
+    yOffset *= sensitivity;
+    
+    yaw += xOffset;
+    pitch += yOffset;
+    
+    if(pitch > 89.0f) {
+        pitch =  89.0f;
+    }
+    if(pitch < -89.0f) {
+        pitch = -89.0f;
+    }
+    
+    glm::vec3 front;
+    front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+    front.y = sin(glm::radians(pitch));
+    front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+    cameraFront = glm::normalize(front);
+}
+
 void render(GLuint VAO, Shader shader) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -28,20 +107,10 @@ void render(GLuint VAO, Shader shader) {
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
     
-    GLfloat radius = 10.0f;
-    glm::vec3 cameraPos = glm::vec3(sin(glfwGetTime()) * radius, 0.0f, cos(glfwGetTime()) * radius);
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
-    glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, cameraUp);
-//    glm::mat4 view = glm::lookAt(glm::vec3(sin(glfwGetTime()) * radius, 0.0f, cos(glfwGetTime()) * radius),
-//                       glm::vec3(0.0f, 0.0f, 0.0f),
-//                       glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), (GLfloat)WIDTH/HEIGHT, 0.1f, 100.0f);
     
     glBindVertexArray(VAO);
     GLuint uniformLocation = glGetUniformLocation(shader.program, "model");
@@ -52,13 +121,6 @@ void render(GLuint VAO, Shader shader) {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-    // Window should close if user pressed ESC key
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
 }
 
 GLFWwindow* initializeGLFWWindow() {
@@ -73,7 +135,7 @@ GLFWwindow* initializeGLFWWindow() {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     
-    GLFWwindow* window = glfwCreateWindow(800, 600, "GK", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "GK", NULL, NULL);
     if(window == NULL) {
         std::cerr << "Failed to create GLFW Window" << std::endl;
         glfwTerminate();
@@ -83,38 +145,10 @@ GLFWwindow* initializeGLFWWindow() {
     glfwMakeContextCurrent(window);
     
     glfwSetKeyCallback(window, key_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
     
     return window;
-}
-
-GLuint compileShader(GLuint type, const GLchar* source) {
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, NULL);
-    glCompileShader(shader);
-    GLint success;
-    GLchar infoLog[512];
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    return shader;
-}
-
-GLuint createAndLinkShaderProgram(GLuint vertexShader, GLuint fragmentShader) {
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    GLint success;
-    GLchar infoLog[512];
-    glGetProgramiv(shaderProgram, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cerr << "ERROR::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
-    }
-    
-    return shaderProgram;
 }
 
 int main(int argc, const char * argv[]) {
@@ -129,7 +163,7 @@ int main(int argc, const char * argv[]) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
         return -1;
     }
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, WIDTH, HEIGHT);
     
     GLfloat vertices[] = {
         // Positions
@@ -164,7 +198,11 @@ int main(int argc, const char * argv[]) {
     
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while(!glfwWindowShouldClose(window)) {
+        GLfloat currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
         glfwPollEvents();
+        do_movement();
         render(VAO, shader);
         glfwSwapBuffers(window);
     }
