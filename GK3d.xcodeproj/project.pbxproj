@@ -11,7 +11,7 @@
 		40895FCB1BD8228200907A4A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCA1BD8228200907A4A /* OpenGL.framework */; };
 		40895FCD1BD8232600907A4A /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */; };
 		40895FD11BD8251F00907A4A /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */; };
-		40A08CA81BDA34E5002E1E7F /* compiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40A08CA71BDA34E5002E1E7F /* compiler.cpp */; settings = {ASSET_TAGS = (); }; };
+		40A107C41BDB863B000CFA11 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40A107C21BDB863B000CFA11 /* shader.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,8 +32,10 @@
 		40895FCA1BD8228200907A4A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.12.0.dylib; path = ../../../../../usr/local/Cellar/glew/1.12.0/lib/libGLEW.1.12.0.dylib; sourceTree = "<group>"; };
 		40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = ../../../../../usr/local/Cellar/glfw3/3.1.1/lib/libglfw3.3.1.dylib; sourceTree = "<group>"; };
-		40A08CA51BDA34B6002E1E7F /* compiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
-		40A08CA71BDA34E5002E1E7F /* compiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compiler.cpp; sourceTree = "<group>"; };
+		40A107C21BDB863B000CFA11 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
+		40A107C31BDB863B000CFA11 /* shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
+		40A107C71BDB956B000CFA11 /* shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.frag; sourceTree = "<group>"; };
+		40A107C81BDB956B000CFA11 /* shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.vert; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,8 +83,10 @@
 		40A08CA61BDA34BE002E1E7F /* glsl */ = {
 			isa = PBXGroup;
 			children = (
-				40A08CA51BDA34B6002E1E7F /* compiler.h */,
-				40A08CA71BDA34E5002E1E7F /* compiler.cpp */,
+				40A107C71BDB956B000CFA11 /* shader.frag */,
+				40A107C81BDB956B000CFA11 /* shader.vert */,
+				40A107C21BDB863B000CFA11 /* shader.cpp */,
+				40A107C31BDB863B000CFA11 /* shader.hpp */,
 			);
 			name = glsl;
 			sourceTree = "<group>";
@@ -143,7 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40A08CA81BDA34E5002E1E7F /* compiler.cpp in Sources */,
+				40A107C41BDB863B000CFA11 /* shader.cpp in Sources */,
 				40895FC41BD821A400907A4A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

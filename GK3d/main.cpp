@@ -7,36 +7,21 @@
 //
 
 #include <iostream>
+#include <math.h>
 #include <GL/glew.h>
-#include "compiler.h"
 
 #include <GLFW/glfw3.h>
 
-// Shaders
-const GLchar* vertexShaderSource = "#version 330 core\n \
-    layout (location = 0) in vec3 position;\n \
-    out vec4 vertexColor;\n \
-    void main() {\n \
-    gl_Position = vec4(position, 1.0);\n \
-    vertexColor = vec4(0.5f, 0.0f, 0.0f, 1.0f);\n \
-    }\0";
+#include "shader.hpp"
 
-const GLchar* fragmentShaderSource = "#version 330 core\n \
-    in vec4 vertexColor;\n \
-    out vec4 color;\n \
-    void main() {\n \
-    color = vertexColor;\n \
-    }\0";
-
-void render(GLuint VAO, GLuint shaderProgram) {
+void render(GLuint VAO, Shader shader) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    glUseProgram(shaderProgram);
+    shader.use();
+    
     glBindVertexArray(VAO);
-    
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    
+    glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
 }
 
@@ -118,48 +103,39 @@ int main(int argc, const char * argv[]) {
     glViewport(0, 0, 800, 600);
     
     GLfloat vertices[] = {
-         0.5f,  0.5f, 0.0f, // Top Right
-         0.5f, -0.5f, 0.0f, // Bottom Right
-        -0.5f, -0.5f, 0.0f, // Bottom Left
-        -0.5f,  0.5f, 0.0f  // Top Left
-    };
-    GLuint indices[] = {
-        0, 1, 3, // First Triangle
-        1, 2, 3  // Second Triangle
+        // Positions         // Colors
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // Bottom Right
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // Bottom Left
+         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // Top
     };
     
+    Shader shader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.vert",
+                           "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.frag");
+    shader.readAndCompile();
     
-    GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
-    GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
-    GLuint shaderProgram = createAndLinkShaderProgram(vertexShader, fragmentShader);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    
-    GLuint VAO, VBO, EBO;
+    GLuint VAO, VBO;
     
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
     
     glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) 0);
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GL_FLOAT)));
+        glEnableVertexAttribArray(1);
     glBindVertexArray(0);
     
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        render(VAO, shaderProgram);
+        render(VAO, shader);
         glfwSwapBuffers(window);
     }
     
     glDeleteBuffers(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
     glfwTerminate();
     
     return 0;
