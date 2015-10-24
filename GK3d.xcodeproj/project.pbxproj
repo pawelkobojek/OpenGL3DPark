@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		407B75911BDC152700DB5A72 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 407B758F1BDC152700DB5A72 /* camera.cpp */; settings = {ASSET_TAGS = (); }; };
 		40895FC41BD821A400907A4A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40895FC31BD821A400907A4A /* main.cpp */; };
 		40895FCB1BD8228200907A4A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCA1BD8228200907A4A /* OpenGL.framework */; };
 		40895FCD1BD8232600907A4A /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */; };
@@ -27,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		407B758F1BDC152700DB5A72 /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
+		407B75901BDC152700DB5A72 /* camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = camera.hpp; sourceTree = "<group>"; };
 		40895FC01BD821A400907A4A /* GK3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GK3d; sourceTree = BUILT_PRODUCTS_DIR; };
 		40895FC31BD821A400907A4A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		40895FCA1BD8228200907A4A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -76,6 +79,8 @@
 			children = (
 				40A08CA61BDA34BE002E1E7F /* glsl */,
 				40895FC31BD821A400907A4A /* main.cpp */,
+				407B758F1BDC152700DB5A72 /* camera.cpp */,
+				407B75901BDC152700DB5A72 /* camera.hpp */,
 			);
 			path = GK3d;
 			sourceTree = "<group>";
@@ -148,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40A107C41BDB863B000CFA11 /* shader.cpp in Sources */,
+				407B75911BDC152700DB5A72 /* camera.cpp in Sources */,
 				40895FC41BD821A400907A4A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

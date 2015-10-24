@@ -17,12 +17,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.hpp"
+#include "camera.hpp"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 bool keys[1024];
 bool firstMouse = true;
@@ -37,16 +40,16 @@ GLfloat lastFrame = 0.0f;
 void do_movement() {
     GLfloat cameraSpeed = 5.0f * deltaTime;
     if(keys[GLFW_KEY_W]) {
-        cameraPos += cameraSpeed * cameraFront;
+        camera.processKeyboard(FORWARD, deltaTime);
     }
     if(keys[GLFW_KEY_S]) {
-        cameraPos -= cameraSpeed * cameraFront;
+        camera.processKeyboard(BACKWARD, deltaTime);
     }
     if(keys[GLFW_KEY_A]) {
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        camera.processKeyboard(LEFT, deltaTime);
     }
     if(keys[GLFW_KEY_D]) {
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        camera.processKeyboard(RIGHT, deltaTime);
     }
 }
 
@@ -76,25 +79,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     lastX = xpos;
     lastY = ypos;
     
-    GLfloat sensitivity = 0.15f;
-    xOffset *= sensitivity;
-    yOffset *= sensitivity;
-    
-    yaw += xOffset;
-    pitch += yOffset;
-    
-    if(pitch > 89.0f) {
-        pitch =  89.0f;
-    }
-    if(pitch < -89.0f) {
-        pitch = -89.0f;
-    }
-    
-    glm::vec3 front;
-    front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-    front.y = sin(glm::radians(pitch));
-    front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-    cameraFront = glm::normalize(front);
+    camera.processMouseMovement(xOffset, yOffset);
 }
 
 void render(GLuint VAO, Shader shader) {
@@ -107,7 +92,7 @@ void render(GLuint VAO, Shader shader) {
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
     
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    glm::mat4 view = camera.getViewMatrix();
     
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), (GLfloat)WIDTH/HEIGHT, 0.1f, 100.0f);
