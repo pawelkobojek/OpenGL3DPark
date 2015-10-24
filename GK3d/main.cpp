@@ -24,20 +24,21 @@ void render(GLuint VAO, Shader shader) {
     
     shader.use();
     
-    glBindVertexArray(VAO);
-    glm::mat4 trans;
-    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-    trans = glm::rotate(trans, glm::radians((GLfloat) glfwGetTime() * 50.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    GLuint transformLocation = glGetUniformLocation(shader.program, "transform");
-    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glm::mat4 model;
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, 0.1f, 100.0f);
     
-    glm::mat4 trans2;
-    trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
-    trans2 = glm::scale(trans2, glm::vec3(sin((GLfloat) glfwGetTime()), sin((GLfloat) glfwGetTime()),  0.0f));
-    transformLocation = glGetUniformLocation(shader.program, "transform");
-    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans2));
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(VAO);
+    GLuint uniformLocation = glGetUniformLocation(shader.program, "model");
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(model));
+    uniformLocation = glGetUniformLocation(shader.program, "view");
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
+    uniformLocation = glGetUniformLocation(shader.program, "projection");
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -119,28 +120,34 @@ int main(int argc, const char * argv[]) {
     glViewport(0, 0, 800, 600);
     
     GLfloat vertices[] = {
-        // Positions         // Colors
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // Bottom Right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // Bottom Left
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // Top
+        // Positions
+         0.5f,  0.5f, 0.0f,   // Top Right
+         0.5f, -0.5f, 0.0f,   // Bottom Right
+        -0.5f, -0.5f, 0.0f,   // Bottom Left
+        -0.5f,  0.5f, 0.0f    // Top Left
+    };
+    GLuint indices[] = {
+        0, 1, 3,
+        1, 2, 3
     };
     
     Shader shader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.vert",
                            "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.frag");
     shader.readAndCompile();
     
-    GLuint VAO, VBO;
+    GLuint VAO, VBO, EBO;
     
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
     
     glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GL_FLOAT)));
-        glEnableVertexAttribArray(1);
     glBindVertexArray(0);
     
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -152,6 +159,7 @@ int main(int argc, const char * argv[]) {
     
     glDeleteBuffers(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glfwTerminate();
     
     return 0;
