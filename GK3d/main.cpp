@@ -31,14 +31,11 @@ bool keys[1024];
 bool firstMouse = true;
 GLfloat lastX = WIDTH / 2;
 GLfloat lastY = HEIGHT / 2;
-GLfloat yaw = -90.0f;
-GLfloat pitch = 0.0f;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 void do_movement() {
-    GLfloat cameraSpeed = 5.0f * deltaTime;
     if(keys[GLFW_KEY_W]) {
         camera.processKeyboard(FORWARD, deltaTime);
     }
@@ -50,6 +47,12 @@ void do_movement() {
     }
     if(keys[GLFW_KEY_D]) {
         camera.processKeyboard(RIGHT, deltaTime);
+    }
+    if(keys[GLFW_KEY_R]) {
+        camera.processKeyboard(UP, deltaTime);
+    }
+    if(keys[GLFW_KEY_F]) {
+        camera.processKeyboard(DOWN, deltaTime);
     }
 }
 
