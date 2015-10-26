@@ -23,6 +23,7 @@ private:
     std::vector<GLuint> indices;
     GLuint VAO, VBO, EBO;
 public:
+    ~Model();
     Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices);
     void draw();
     
