@@ -8,7 +8,8 @@
 
 #include "model.hpp"
 
-Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices) : vertices(vertices), indices(indices) {
+Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color)
+        : vertices(vertices), indices(indices), color(color) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -23,6 +24,11 @@ Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices) : ver
     glBindVertexArray(0);
 }
 
+Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, GLfloat* modelMatrixValuePtr)
+: Model::Model(vertices, indices, color) {
+    this->modelMatrixValuePtr = modelMatrixValuePtr;
+}
+
 Model::~Model() {
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
@@ -32,6 +38,8 @@ Model::~Model() {
 void Model::draw(GLuint shaderProgram) {
     GLuint uniformLocation = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, modelMatrixValuePtr);
+    uniformLocation = glGetUniformLocation(shaderProgram, "objectColor");
+    glUniform3f(uniformLocation, color[0], color[1], color[2]);
     
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, 0);
@@ -70,5 +78,64 @@ Model Model::createGround(const int meshCount, const GLfloat maxHillHeight) {
         }
     }
     
-    return Model(groundVertices, groundIndices);
+    return Model(groundVertices, groundIndices, glm::vec3(0.0f, 0.36f, 0.03f));
+}
+
+Model Model::createCube() {
+    GLfloat cubeVerts[] = {
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        
+        -0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
+        
+        -0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f
+    };
+    
+    std::vector<glm::vec3> vertices;
+    std::vector<GLuint> indices;
+
+    for (int i = 0; i < 36*3; i+=3) {
+        glm::vec3 vert(cubeVerts[i], cubeVerts[i+1], cubeVerts[i+2]);
+        vertices.push_back(vert);
+        indices.push_back(i);
+        indices.push_back(i+1);
+        indices.push_back(i+2);
+    }
+    
+    return Model(vertices, indices, glm::vec3(1.0f, 1.0f, 1.0f));
 }

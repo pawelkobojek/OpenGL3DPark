@@ -87,15 +87,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     camera.processMouseMovement(xOffset, yOffset);
 }
 
-void render(Model ground, Shader shader) {
+void render(std::vector<Model> models, Shader shader) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
     shader.use();
-    
-    glm::mat4 model;
-    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
-    ground.setModelMatrix(glm::value_ptr(model));
     
     glm::mat4 view = camera.getViewMatrix();
     
@@ -107,7 +103,9 @@ void render(Model ground, Shader shader) {
     uniformLocation = glGetUniformLocation(shader.program, "projection");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
     
-    ground.draw(shader.program);
+    for (int i = 0; i < models.size(); ++i) {
+        models[i].draw(shader.program);
+    }
 }
 
 GLFWwindow* initializeGLFWWindow() {
@@ -156,7 +154,19 @@ int main(int argc, const char * argv[]) {
                            "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.frag");
     shader.readAndCompile();
     
+    std::vector<Model> models;
     Model ground = Model::createGround();
+    glm::mat4 model;
+    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+    ground.setModelMatrix(glm::value_ptr(model));
+    models.push_back(ground);
+    
+    Model lightCube = Model::createCube();
+    glm::mat4 lightModel;
+    lightModel = glm::scale(lightModel, glm::vec3(0.08f));
+    lightModel = glm::translate(lightModel, glm::vec3(0.0f, 18.0f, 0.0f));
+    lightCube.setModelMatrix(glm::value_ptr(lightModel));
+    models.push_back(lightCube);
     
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while(!glfwWindowShouldClose(window)) {
@@ -165,7 +175,7 @@ int main(int argc, const char * argv[]) {
         lastFrame = currentFrame;
         glfwPollEvents();
         do_movement();
-        render(ground, shader);
+        render(models, shader);
         glfwSwapBuffers(window);
     }
     
