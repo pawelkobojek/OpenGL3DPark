@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <vector>
 #include <math.h>
 #include <GL/glew.h>
 
@@ -25,7 +26,7 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
 
 bool keys[1024];
 bool firstMouse = true;
@@ -92,8 +93,7 @@ void render(GLuint VAO, Shader shader) {
     shader.use();
     
     glm::mat4 model;
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
     
     glm::mat4 view = camera.getViewMatrix();
     
@@ -107,8 +107,8 @@ void render(GLuint VAO, Shader shader) {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
     uniformLocation = glGetUniformLocation(shader.program, "projection");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
-//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawElements(GL_TRIANGLES, 100 * 100 * 6, GL_UNSIGNED_INT, 0);
+    //glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
 
@@ -154,63 +154,34 @@ int main(int argc, const char * argv[]) {
     }
     glViewport(0, 0, WIDTH, HEIGHT);
     
-//    GLfloat vertices[] = {
-//        // Positions
-//         0.5f,  0.5f, 0.0f,   // Top Right
-//         0.5f, -0.5f, 0.0f,   // Bottom Right
-//        -0.5f, -0.5f, 0.0f,   // Bottom Left
-//        -0.5f,  0.5f, 0.0f    // Top Left
-//    };
+    std::vector<glm::vec3> groundVertices;
+    std::vector<GLint> groundIndices;
+    const int meshCount = 100;
     
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        
-        -0.5f, -0.5f,  0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        
-        0.5f,  0.5f,  0.5f,
-        0.5f,  0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
-        
-        -0.5f,  0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        0.5f,  0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f
-    };
+    float from = -1.0f;
+    float to = 1.0f;
+    float diff = to - from;
+    for (int i = 0; i <= meshCount; ++i) {
+        for (int j = 0; j <= meshCount; ++j) {
+            float x = (i * diff / meshCount) + from;
+            float z = (j * diff / meshCount) + from;
+            float y = (float) rand() / (float) RAND_MAX;
+            groundVertices.push_back(glm::vec3(x, y * 0.05f, z));
+        }
+    }
     
-    GLuint indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
-    
+    for (int i = 0; i < meshCount; ++i) {
+        for (int j = 0; j < meshCount; ++j) {
+            groundIndices.push_back((i) * (meshCount + 1) + j);
+            groundIndices.push_back((i + 1) * (meshCount + 1) + j);
+            groundIndices.push_back((i) * (meshCount + 1) + j + 1);
+            
+            groundIndices.push_back((i) * (meshCount + 1) + j + 1);
+            groundIndices.push_back((i + 1) * (meshCount + 1) + j);
+            groundIndices.push_back((i + 1) * (meshCount + 1) + j + 1);
+        }
+    }
+
     Shader shader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.vert",
                            "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.frag");
     shader.readAndCompile();
@@ -223,9 +194,9 @@ int main(int argc, const char * argv[]) {
     
     glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, groundVertices.size() * sizeof(glm::vec3), groundVertices.data(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, groundIndices.size() * sizeof(GLint), groundIndices.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
         glEnableVertexAttribArray(0);
     glBindVertexArray(0);

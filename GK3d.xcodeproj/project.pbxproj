@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		401F7E621BDE7A9C0011F771 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 401F7E601BDE7A9C0011F771 /* model.cpp */; settings = {ASSET_TAGS = (); }; };
 		407B75911BDC152700DB5A72 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 407B758F1BDC152700DB5A72 /* camera.cpp */; settings = {ASSET_TAGS = (); }; };
 		40895FC41BD821A400907A4A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40895FC31BD821A400907A4A /* main.cpp */; };
 		40895FCB1BD8228200907A4A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCA1BD8228200907A4A /* OpenGL.framework */; };
@@ -28,6 +29,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		401F7E601BDE7A9C0011F771 /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
+		401F7E611BDE7A9C0011F771 /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = model.hpp; sourceTree = "<group>"; };
 		407B758F1BDC152700DB5A72 /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
 		407B75901BDC152700DB5A72 /* camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = camera.hpp; sourceTree = "<group>"; };
 		40895FC01BD821A400907A4A /* GK3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GK3d; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +84,8 @@
 				40895FC31BD821A400907A4A /* main.cpp */,
 				407B758F1BDC152700DB5A72 /* camera.cpp */,
 				407B75901BDC152700DB5A72 /* camera.hpp */,
+				401F7E601BDE7A9C0011F771 /* model.cpp */,
+				401F7E611BDE7A9C0011F771 /* model.hpp */,
 			);
 			path = GK3d;
 			sourceTree = "<group>";
@@ -155,6 +160,7 @@
 				40A107C41BDB863B000CFA11 /* shader.cpp in Sources */,
 				407B75911BDC152700DB5A72 /* camera.cpp in Sources */,
 				40895FC41BD821A400907A4A /* main.cpp in Sources */,
+				401F7E621BDE7A9C0011F771 /* model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
