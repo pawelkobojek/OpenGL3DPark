@@ -107,7 +107,8 @@ void render(GLuint VAO, Shader shader) {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
     uniformLocation = glGetUniformLocation(shader.program, "projection");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
 
@@ -153,13 +154,58 @@ int main(int argc, const char * argv[]) {
     }
     glViewport(0, 0, WIDTH, HEIGHT);
     
+//    GLfloat vertices[] = {
+//        // Positions
+//         0.5f,  0.5f, 0.0f,   // Top Right
+//         0.5f, -0.5f, 0.0f,   // Bottom Right
+//        -0.5f, -0.5f, 0.0f,   // Bottom Left
+//        -0.5f,  0.5f, 0.0f    // Top Left
+//    };
+    
     GLfloat vertices[] = {
-        // Positions
-         0.5f,  0.5f, 0.0f,   // Top Right
-         0.5f, -0.5f, 0.0f,   // Bottom Right
-        -0.5f, -0.5f, 0.0f,   // Bottom Left
-        -0.5f,  0.5f, 0.0f    // Top Left
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
+        
+        -0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f
     };
+    
     GLuint indices[] = {
         0, 1, 3,
         1, 2, 3
