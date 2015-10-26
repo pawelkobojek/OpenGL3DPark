@@ -95,20 +95,19 @@ void render(Model ground, Shader shader) {
     
     glm::mat4 model;
     model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+    ground.setModelMatrix(glm::value_ptr(model));
     
     glm::mat4 view = camera.getViewMatrix();
     
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), (GLfloat)WIDTH/HEIGHT, 0.1f, 100.0f);
     
-    GLuint uniformLocation = glGetUniformLocation(shader.program, "model");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(model));
-    uniformLocation = glGetUniformLocation(shader.program, "view");
+    GLuint uniformLocation = glGetUniformLocation(shader.program, "view");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
     uniformLocation = glGetUniformLocation(shader.program, "projection");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
     
-    ground.draw();
+    ground.draw(shader.program);
 }
 
 GLFWwindow* initializeGLFWWindow() {

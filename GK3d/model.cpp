@@ -29,40 +29,46 @@ Model::~Model() {
     glDeleteBuffers(1, &VAO);
 }
 
-void Model::draw() {
+void Model::draw(GLuint shaderProgram) {
+    GLuint uniformLocation = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, modelMatrixValuePtr);
+    
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
- Model Model::createGround() {
-     std::vector<glm::vec3> groundVertices;
-     std::vector<GLuint> groundIndices;
-     const int meshCount = 100;
-     
-     float from = -1.0f;
-     float to = 1.0f;
-     float diff = to - from;
-     for (int i = 0; i <= meshCount; ++i) {
-         for (int j = 0; j <= meshCount; ++j) {
-             float x = (i * diff / meshCount) + from;
-             float z = (j * diff / meshCount) + from;
-             float y = (float) rand() / (float) RAND_MAX;
-             groundVertices.push_back(glm::vec3(x, y * 0.05f, z));
-         }
-     }
-     
-     for (int i = 0; i < meshCount; ++i) {
-         for (int j = 0; j < meshCount; ++j) {
-             groundIndices.push_back((i) * (meshCount + 1) + j);
-             groundIndices.push_back((i + 1) * (meshCount + 1) + j);
-             groundIndices.push_back((i) * (meshCount + 1) + j + 1);
-             
-             groundIndices.push_back((i) * (meshCount + 1) + j + 1);
-             groundIndices.push_back((i + 1) * (meshCount + 1) + j);
-             groundIndices.push_back((i + 1) * (meshCount + 1) + j + 1);
-         }
-     }
-     
-     return Model(groundVertices, groundIndices);
+void Model::setModelMatrix(GLfloat* modelMatrixValuePtr) {
+    this->modelMatrixValuePtr = modelMatrixValuePtr;
+}
+
+Model Model::createGround(const int meshCount, const GLfloat maxHillHeight) {
+    std::vector<glm::vec3> groundVertices;
+    std::vector<GLuint> groundIndices;
+    
+    float from = -1.0f;
+    float to = 1.0f;
+    float diff = to - from;
+    for (int i = 0; i <= meshCount; ++i) {
+        for (int j = 0; j <= meshCount; ++j) {
+            float x = (i * diff / meshCount) + from;
+            float z = (j * diff / meshCount) + from;
+            float y = (float) rand() / (float) RAND_MAX;
+            groundVertices.push_back(glm::vec3(x, y * maxHillHeight, z));
+        }
+    }
+    
+    for (int i = 0; i < meshCount; ++i) {
+        for (int j = 0; j < meshCount; ++j) {
+            groundIndices.push_back((i) * (meshCount + 1) + j);
+            groundIndices.push_back((i + 1) * (meshCount + 1) + j);
+            groundIndices.push_back((i) * (meshCount + 1) + j + 1);
+            
+            groundIndices.push_back((i) * (meshCount + 1) + j + 1);
+            groundIndices.push_back((i + 1) * (meshCount + 1) + j);
+            groundIndices.push_back((i + 1) * (meshCount + 1) + j + 1);
+        }
+    }
+    
+    return Model(groundVertices, groundIndices);
 }

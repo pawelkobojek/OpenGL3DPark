@@ -22,12 +22,16 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<GLuint> indices;
     GLuint VAO, VBO, EBO;
+    GLfloat* modelMatrixValuePtr;
 public:
-    ~Model();
     Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices);
-    void draw();
+    ~Model();
+
+    void setModelMatrix(GLfloat* modelMatrixValuePtr);
+
+    void draw(GLuint shaderProgram);
     
-    static Model createGround();
+    static Model createGround(const int meshCount = 100, const GLfloat maxHillHeight = 0.01f);
 };
 
 #endif /* model_hpp */
