@@ -41,6 +41,8 @@ void Model::draw() {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, modelMatrixValuePtr);
     uniformLocation = glGetUniformLocation(shader->program, "objectColor");
     glUniform3f(uniformLocation, color[0], color[1], color[2]);
+    uniformLocation = glGetUniformLocation(shader->program, "lightColor");
+    glUniform3f(uniformLocation, lightColor[0], lightColor[1], lightColor[2]);
     
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, 0);
@@ -49,6 +51,10 @@ void Model::draw() {
 
 void Model::setModelMatrix(GLfloat* modelMatrixValuePtr) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
+}
+
+void Model::setLightColor(glm::vec3 lightColor) {
+    this->lightColor = lightColor;
 }
 
 Model Model::createGround(Shader* shader, const int meshCount, const GLfloat maxHillHeight) {

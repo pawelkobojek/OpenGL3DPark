@@ -91,19 +91,18 @@ void render(std::vector<Model> models, Shader shader) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    shader.use();
-    
-    glm::mat4 view = camera.getViewMatrix();
-    
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), (GLfloat)WIDTH/HEIGHT, 0.1f, 100.0f);
-    
-    GLuint uniformLocation = glGetUniformLocation(shader.program, "view");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
-    uniformLocation = glGetUniformLocation(shader.program, "projection");
-    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
-    
     for (int i = 0; i < models.size(); ++i) {
+        models[i].shader->use();
+        glm::mat4 view = camera.getViewMatrix();
+        
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), (GLfloat)WIDTH/HEIGHT, 0.1f, 100.0f);
+        
+        GLuint uniformLocation = glGetUniformLocation(shader.program, "view");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
+        uniformLocation = glGetUniformLocation(shader.program, "projection");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
+        
         models[i].draw();
     }
 }

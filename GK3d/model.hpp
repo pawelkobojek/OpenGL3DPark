@@ -27,16 +27,19 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<GLuint> indices;
     GLuint VAO, VBO, EBO;
-    Shader* shader;
     GLfloat* modelMatrixValuePtr;
     glm::vec3 color;
+    glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 public:
+    Shader* shader;
+    
     Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader);
     Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
           GLfloat* modelMatrixValuePtr);
     ~Model();
 
     void setModelMatrix(GLfloat* modelMatrixValuePtr);
+    void setLightColor(glm::vec3 lightColor);
 
     void draw();
     
