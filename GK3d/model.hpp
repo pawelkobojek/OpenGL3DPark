@@ -42,9 +42,11 @@ public:
     void setLightColor(glm::vec3 lightColor);
 
     void draw();
+    void drawWith(GLfloat* modelMatrixValuePtr);
     
-    static Model createGround(Shader* shader, const int meshCount = MESH_COUNT, const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
-    static Model createCube(Shader* shader);
+    static Model createGround(Shader* shader, const int meshCount = MESH_COUNT,
+                              const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
+    static Model createCube(Shader* shader, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
 };
 
 #endif /* model_hpp */

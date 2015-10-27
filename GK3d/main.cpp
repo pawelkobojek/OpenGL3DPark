@@ -37,6 +37,10 @@ GLfloat lastY = HEIGHT / 2;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
+glm::vec3 lightPos(1.2f, 5.0f, 2.0f);
+
+bool polygonMode = false;
+
 void do_movement() {
     if(keys[GLFW_KEY_W]) {
         camera.processKeyboard(FORWARD, deltaTime);
@@ -62,6 +66,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     // Window should close if user pressed ESC key
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+    if(key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+        polygonMode = !polygonMode;
     }
     if(key >= 0 && key < 1024) {
         if(action == GLFW_PRESS) {
@@ -89,7 +96,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 void render(std::vector<Model> models, Shader shader) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     for (int i = 0; i < models.size(); ++i) {
         models[i].shader->use();
@@ -102,6 +109,9 @@ void render(std::vector<Model> models, Shader shader) {
         glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(view));
         uniformLocation = glGetUniformLocation(shader.program, "projection");
         glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
+        
+        uniformLocation = glGetUniformLocation(shader.program, "lightPos");
+        glUniform3f(uniformLocation, lightPos[0], lightPos[1], lightPos[2]);
         
         models[i].draw();
     }
@@ -148,6 +158,7 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     glViewport(0, 0, WIDTH, HEIGHT);
+    glEnable(GL_DEPTH_TEST);
     
     Shader shader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/objectShader.vert",
                            "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/objectShader.frag");
@@ -168,16 +179,23 @@ int main(int argc, const char * argv[]) {
     Model lightCube = Model::createCube(&lightShader);
     glm::mat4 lightModel;
     lightModel = glm::scale(lightModel, glm::vec3(0.08f));
-    lightModel = glm::translate(lightModel, glm::vec3(0.0f, 18.0f, 0.0f));
+    lightModel = glm::translate(lightModel, lightPos);
     lightCube.setModelMatrix(glm::value_ptr(lightModel));
     models.push_back(lightCube);
     
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    Model justCube = Model::createCube(&shader, glm::vec3(1.0f, 0.5f, 0.31f));
+    glm::mat4 justModel;
+    justModel = glm::scale(justModel, glm::vec3(0.1f));
+    justModel = glm::translate(justModel, glm::vec3(2.0f, 3.0f, 0.0f));
+    justCube.setModelMatrix(glm::value_ptr(justModel));
+    models.push_back(justCube);
+    
     while(!glfwWindowShouldClose(window)) {
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         glfwPollEvents();
+        glPolygonMode(GL_FRONT_AND_BACK, polygonMode ? GL_LINE : GL_FILL);
         do_movement();
         render(models, shader);
         glfwSwapBuffers(window);
