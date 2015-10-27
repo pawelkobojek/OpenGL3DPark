@@ -37,7 +37,7 @@ GLfloat lastY = HEIGHT / 2;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
-glm::vec3 lightPos(1.2f, 5.0f, 2.0f);
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 bool polygonMode = false;
 
@@ -113,6 +113,9 @@ void render(std::vector<Model> models, Shader shader) {
         uniformLocation = glGetUniformLocation(shader.program, "lightPos");
         glUniform3f(uniformLocation, lightPos[0], lightPos[1], lightPos[2]);
         
+        uniformLocation = glGetUniformLocation(shader.program, "viewerPos");
+        glUniform3f(uniformLocation, camera.position[0], camera.position[1], camera.position[2]);
+        
         models[i].draw();
     }
 }
@@ -170,23 +173,22 @@ int main(int argc, const char * argv[]) {
     
     
     std::vector<Model> models;
-    Model ground = Model::createGround(&shader);
-    glm::mat4 model;
-    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
-    ground.setModelMatrix(glm::value_ptr(model));
-    models.push_back(ground);
+//    Model ground = Model::createGround(&shader);
+//    glm::mat4 model;
+//    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+//    ground.setModelMatrix(glm::value_ptr(model));
+//    models.push_back(ground);
     
     Model lightCube = Model::createCube(&lightShader);
     glm::mat4 lightModel;
-    lightModel = glm::scale(lightModel, glm::vec3(0.08f));
+    lightModel = glm::scale(lightModel, glm::vec3(0.2f));
     lightModel = glm::translate(lightModel, lightPos);
     lightCube.setModelMatrix(glm::value_ptr(lightModel));
     models.push_back(lightCube);
     
     Model justCube = Model::createCube(&shader, glm::vec3(1.0f, 0.5f, 0.31f));
     glm::mat4 justModel;
-    justModel = glm::scale(justModel, glm::vec3(0.1f));
-    justModel = glm::translate(justModel, glm::vec3(2.0f, 3.0f, 0.0f));
+    justModel = glm::translate(justModel, glm::vec3(1.0f, 1.0f, 0.0f));
     justCube.setModelMatrix(glm::value_ptr(justModel));
     models.push_back(justCube);
     
