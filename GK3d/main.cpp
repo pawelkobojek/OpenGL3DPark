@@ -104,7 +104,7 @@ void render(std::vector<Model> models, Shader shader) {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
     
     for (int i = 0; i < models.size(); ++i) {
-        models[i].draw(shader.program);
+        models[i].draw();
     }
 }
 
@@ -150,18 +150,23 @@ int main(int argc, const char * argv[]) {
     }
     glViewport(0, 0, WIDTH, HEIGHT);
     
-    Shader shader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.vert",
-                           "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/shader.frag");
+    Shader shader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/objectShader.vert",
+                           "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/objectShader.frag");
     shader.readAndCompile();
     
+    Shader lightShader = Shader("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/objectShader.vert",
+                                "/Users/pawelkobojek/Development/grafika/GK3d/GK3d/lightShader.frag");
+    lightShader.readAndCompile();
+    
+    
     std::vector<Model> models;
-    Model ground = Model::createGround();
+    Model ground = Model::createGround(&shader);
     glm::mat4 model;
     model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
     ground.setModelMatrix(glm::value_ptr(model));
     models.push_back(ground);
     
-    Model lightCube = Model::createCube();
+    Model lightCube = Model::createCube(&lightShader);
     glm::mat4 lightModel;
     lightModel = glm::scale(lightModel, glm::vec3(0.08f));
     lightModel = glm::translate(lightModel, glm::vec3(0.0f, 18.0f, 0.0f));

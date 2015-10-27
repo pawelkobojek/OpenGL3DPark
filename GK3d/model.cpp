@@ -8,8 +8,8 @@
 
 #include "model.hpp"
 
-Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color)
-        : vertices(vertices), indices(indices), color(color) {
+Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader)
+        : vertices(vertices), indices(indices), color(color), shader(shader) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -24,8 +24,9 @@ Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::
     glBindVertexArray(0);
 }
 
-Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, GLfloat* modelMatrixValuePtr)
-: Model::Model(vertices, indices, color) {
+Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
+             GLfloat* modelMatrixValuePtr)
+: Model::Model(vertices, indices, color, shader) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
 }
 
@@ -35,10 +36,10 @@ Model::~Model() {
     glDeleteBuffers(1, &VAO);
 }
 
-void Model::draw(GLuint shaderProgram) {
-    GLuint uniformLocation = glGetUniformLocation(shaderProgram, "model");
+void Model::draw() {
+    GLuint uniformLocation = glGetUniformLocation(shader->program, "model");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, modelMatrixValuePtr);
-    uniformLocation = glGetUniformLocation(shaderProgram, "objectColor");
+    uniformLocation = glGetUniformLocation(shader->program, "objectColor");
     glUniform3f(uniformLocation, color[0], color[1], color[2]);
     
     glBindVertexArray(this->VAO);
@@ -50,7 +51,7 @@ void Model::setModelMatrix(GLfloat* modelMatrixValuePtr) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
 }
 
-Model Model::createGround(const int meshCount, const GLfloat maxHillHeight) {
+Model Model::createGround(Shader* shader, const int meshCount, const GLfloat maxHillHeight) {
     std::vector<glm::vec3> groundVertices;
     std::vector<GLuint> groundIndices;
     
@@ -78,10 +79,10 @@ Model Model::createGround(const int meshCount, const GLfloat maxHillHeight) {
         }
     }
     
-    return Model(groundVertices, groundIndices, glm::vec3(0.0f, 0.36f, 0.03f));
+    return Model(groundVertices, groundIndices, glm::vec3(0.0f, 0.36f, 0.03f), shader);
 }
 
-Model Model::createCube() {
+Model Model::createCube(Shader* shader) {
     GLfloat cubeVerts[] = {
         -0.5f, -0.5f, -0.5f,
          0.5f, -0.5f, -0.5f,
@@ -137,5 +138,5 @@ Model Model::createCube() {
         indices.push_back(i+2);
     }
     
-    return Model(vertices, indices, glm::vec3(1.0f, 1.0f, 1.0f));
+    return Model(vertices, indices, glm::vec3(1.0f, 1.0f, 1.0f), shader);
 }

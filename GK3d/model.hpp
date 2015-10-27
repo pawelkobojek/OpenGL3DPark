@@ -17,6 +17,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "shader.hpp"
+
 #define MESH_COUNT 100
 #define MAX_HILL_HEIGHT 0.01f
 
@@ -25,20 +27,21 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<GLuint> indices;
     GLuint VAO, VBO, EBO;
+    Shader* shader;
     GLfloat* modelMatrixValuePtr;
     glm::vec3 color;
 public:
-    Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color);
-    Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, GLfloat* modelMatrixValuePtr);
+    Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader);
+    Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
+          GLfloat* modelMatrixValuePtr);
     ~Model();
 
     void setModelMatrix(GLfloat* modelMatrixValuePtr);
 
-    void draw(GLuint shaderProgram);
+    void draw();
     
-    static Model createGround(const int meshCount = MESH_COUNT, const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
-//    static Model createGround(GLfloat* modelMatrixValuePtr, const int meshCount = MESH_COUNT, const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
-    static Model createCube();
+    static Model createGround(Shader* shader, const int meshCount = MESH_COUNT, const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
+    static Model createCube(Shader* shader);
 };
 
 #endif /* model_hpp */

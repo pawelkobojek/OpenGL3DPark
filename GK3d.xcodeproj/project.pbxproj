@@ -38,10 +38,11 @@
 		40895FCA1BD8228200907A4A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.12.0.dylib; path = ../../../../../usr/local/Cellar/glew/1.12.0/lib/libGLEW.1.12.0.dylib; sourceTree = "<group>"; };
 		40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.1.dylib; path = ../../../../../usr/local/Cellar/glfw3/3.1.1/lib/libglfw3.3.1.dylib; sourceTree = "<group>"; };
+		409C90811BDF81EF0009BC47 /* lightShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lightShader.frag; sourceTree = "<group>"; };
 		40A107C21BDB863B000CFA11 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		40A107C31BDB863B000CFA11 /* shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
-		40A107C71BDB956B000CFA11 /* shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.frag; sourceTree = "<group>"; };
-		40A107C81BDB956B000CFA11 /* shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.vert; sourceTree = "<group>"; };
+		40A107C71BDB956B000CFA11 /* objectShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = objectShader.frag; sourceTree = "<group>"; };
+		40A107C81BDB956B000CFA11 /* objectShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = objectShader.vert; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,10 +94,11 @@
 		40A08CA61BDA34BE002E1E7F /* glsl */ = {
 			isa = PBXGroup;
 			children = (
-				40A107C71BDB956B000CFA11 /* shader.frag */,
-				40A107C81BDB956B000CFA11 /* shader.vert */,
+				40A107C71BDB956B000CFA11 /* objectShader.frag */,
+				40A107C81BDB956B000CFA11 /* objectShader.vert */,
 				40A107C21BDB863B000CFA11 /* shader.cpp */,
 				40A107C31BDB863B000CFA11 /* shader.hpp */,
+				409C90811BDF81EF0009BC47 /* lightShader.frag */,
 			);
 			name = glsl;
 			sourceTree = "<group>";
