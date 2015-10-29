@@ -37,7 +37,10 @@ GLfloat lastY = HEIGHT / 2;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 pointLightPositions[] = {
+    glm::vec3( 0.7f,  0.2f,  2.0f),
+    glm::vec3( 2.3f, -3.3f, -4.0f),
+};
 
 bool polygonMode = false;
 
@@ -110,12 +113,27 @@ void render(std::vector<Model> models, Shader shader) {
         uniformLocation = glGetUniformLocation(shader.program, "projection");
         glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
         
-        uniformLocation = glGetUniformLocation(shader.program, "lightPos");
-        glUniform3f(uniformLocation, lightPos[0], lightPos[1], lightPos[2]);
-        
         uniformLocation = glGetUniformLocation(shader.program, "viewerPos");
         glUniform3f(uniformLocation, camera.position[0], camera.position[1], camera.position[2]);
         
+        // AAA
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[0].position"), pointLightPositions[0].x,
+                    pointLightPositions[0].y, pointLightPositions[0].z);
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[0].ambient"), 0.05f, 0.05f, 0.05f);
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[0].diffuse"), 0.8f, 0.8f, 0.8f);
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
+        glUniform1f(glGetUniformLocation(shader.program, "pointLights[0].constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(shader.program, "pointLights[0].linear"), 0.09);
+        glUniform1f(glGetUniformLocation(shader.program, "pointLights[0].quadratic"), 0.032);
+        // Point light 2
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[1].ambient"), 0.05f, 0.05f, 0.05f);
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[1].diffuse"), 0.8f, 0.8f, 0.8f);
+        glUniform3f(glGetUniformLocation(shader.program, "pointLights[1].specular"), 1.0f, 1.0f, 1.0f);
+        glUniform1f(glGetUniformLocation(shader.program, "pointLights[1].constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(shader.program, "pointLights[1].linear"), 0.09);
+        glUniform1f(glGetUniformLocation(shader.program, "pointLights[1].quadratic"), 0.032);
+        // AAA
         models[i].draw();
     }
 }
@@ -182,7 +200,7 @@ int main(int argc, const char * argv[]) {
     Model lightCube = Model::createCube(&lightShader);
     glm::mat4 lightModel;
     lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-    lightModel = glm::translate(lightModel, lightPos);
+    lightModel = glm::translate(lightModel, pointLightPositions[0]);
     lightCube.setModelMatrix(glm::value_ptr(lightModel));
     models.push_back(lightCube);
     
