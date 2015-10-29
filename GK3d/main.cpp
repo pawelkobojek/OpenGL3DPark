@@ -133,6 +133,19 @@ void render(std::vector<Model> models, Shader shader) {
         glUniform1f(glGetUniformLocation(shader.program, "pointLights[1].constant"), 1.0f);
         glUniform1f(glGetUniformLocation(shader.program, "pointLights[1].linear"), 0.09);
         glUniform1f(glGetUniformLocation(shader.program, "pointLights[1].quadratic"), 0.032);
+        
+        glUniform3f(glGetUniformLocation(shader.program, "spotLight.position"), camera.position.x, camera.position.y,
+                    camera.position.z);
+         glUniform3f(glGetUniformLocation(shader.program, "spotLight.direction"), camera.front.x, camera.front.y,
+                     camera.front.z);
+         glUniform3f(glGetUniformLocation(shader.program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
+         glUniform3f(glGetUniformLocation(shader.program, "spotLight.diffuse"), 1.0f, 1.0f, 1.0f);
+         glUniform3f(glGetUniformLocation(shader.program, "spotLight.specular"), 1.0f, 1.0f, 1.0f);
+         glUniform1f(glGetUniformLocation(shader.program, "spotLight.constant"), 1.0f);
+         glUniform1f(glGetUniformLocation(shader.program, "spotLight.linear"), 0.09);
+         glUniform1f(glGetUniformLocation(shader.program, "spotLight.quadratic"), 0.032);
+         glUniform1f(glGetUniformLocation(shader.program, "spotLight.cutOff"), glm::cos(glm::radians(12.5f)));
+         glUniform1f(glGetUniformLocation(shader.program, "spotLight.outerCutOff"), glm::cos(glm::radians(15.0f)));
         // AAA
         models[i].draw();
     }
@@ -191,11 +204,11 @@ int main(int argc, const char * argv[]) {
     
     
     std::vector<Model> models;
-//    Model ground = Model::createGround(&shader);
-//    glm::mat4 model;
-//    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
-//    ground.setModelMatrix(glm::value_ptr(model));
-//    models.push_back(ground);
+    Model ground = Model::createGround(&shader);
+    glm::mat4 model;
+    model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+    ground.setModelMatrix(glm::value_ptr(model));
+    models.push_back(ground);
     
     Model lightCube = Model::createCube(&lightShader);
     glm::mat4 lightModel;
