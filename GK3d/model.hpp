@@ -47,7 +47,7 @@ public:
     
     static Model createGround(Shader* shader, const int meshCount = MESH_COUNT,
                               const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
-    static Model createCube(Shader* shader, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
+    static Model createCube(Shader* shader);
 };
 
 #endif /* model_hpp */

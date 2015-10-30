@@ -101,7 +101,7 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
     return Model(groundVertices, groundIndices, material, shader);
 }
 
-Model Model::createCube(Shader* shader, glm::vec3 color) {
+Model Model::createCube(Shader* shader) {
     GLfloat cubeVerts[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,

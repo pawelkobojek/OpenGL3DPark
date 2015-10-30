@@ -39,7 +39,7 @@ struct SpotLight {
     vec3 specular;
 };
 
-#define POINT_LIGHTS_COUNT 2
+#define POINT_LIGHTS_COUNT 4
 #define SHININESS 256
 
 uniform PointLight pointLights[POINT_LIGHTS_COUNT];
@@ -84,9 +84,9 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
     // Combine results
-    vec3 ambient = light.ambient * material.ambient;//vec3(texture(material.diffuse, TexCoords));
-    vec3 diffuse = light.diffuse * diff * material.diffuse;//vec3(texture(material.diffuse, TexCoords));
-    vec3 specular = light.specular * spec * material.specular;//vec3(texture(material.specular, TexCoords));
+    vec3 ambient = light.ambient * material.ambient;
+    vec3 diffuse = light.diffuse * diff * material.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
@@ -105,7 +105,7 @@ void main() {
         result += calcPointLight(pointLights[i], norm, fragPos, viewDir);
     }
     
-    result += calcSpotLight(spotLight, norm, fragPos, viewDir); // spotlight
+    result += calcSpotLight(spotLight, norm, fragPos, viewDir);
     
     color = vec4(result, 1.0f);
 }
