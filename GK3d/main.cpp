@@ -101,6 +101,8 @@ void render(std::vector<Model> models, Shader shader) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    
+    
     for (int i = 0; i < models.size(); ++i) {
         models[i].shader->use();
         glm::mat4 view = camera.getViewMatrix();
@@ -209,13 +211,6 @@ int main(int argc, const char * argv[]) {
     model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
     ground.setModelMatrix(glm::value_ptr(model));
     models.push_back(ground);
-    
-    Model lightCube = Model::createCube(&lightShader);
-    glm::mat4 lightModel;
-    lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-    lightModel = glm::translate(lightModel, pointLightPositions[0]);
-    lightCube.setModelMatrix(glm::value_ptr(lightModel));
-    models.push_back(lightCube);
     
     Model justCube = Model::createCube(&shader, glm::vec3(1.0f, 0.5f, 0.31f));
     glm::mat4 justModel;

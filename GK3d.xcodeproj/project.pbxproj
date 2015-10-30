@@ -43,6 +43,7 @@
 		40A107C31BDB863B000CFA11 /* shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		40A107C71BDB956B000CFA11 /* objectShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = objectShader.frag; sourceTree = "<group>"; };
 		40A107C81BDB956B000CFA11 /* objectShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = objectShader.vert; sourceTree = "<group>"; };
+		40EE08601BE290BD00A4C3FE /* material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = material.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +88,7 @@
 				407B75901BDC152700DB5A72 /* camera.hpp */,
 				401F7E601BDE7A9C0011F771 /* model.cpp */,
 				401F7E611BDE7A9C0011F771 /* model.hpp */,
+				40EE08601BE290BD00A4C3FE /* material.hpp */,
 			);
 			path = GK3d;
 			sourceTree = "<group>";
