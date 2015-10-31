@@ -23,6 +23,7 @@
 #include "light.hpp"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
+const int POINT_LIGHTS_COUNT = 2;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -38,7 +39,10 @@ GLfloat lastY = HEIGHT / 2;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
-glm::vec3 lightPos(1.2f, 0.5f, 2.0f);
+Light pointLights[] = {
+    Light(glm::vec3(1.2f, 0.5f, 2.0f)),
+    Light(glm::vec3(-1.2f, 0.5f, -2.0f))
+};
 
 bool polygonMode = false;
 
@@ -108,7 +112,7 @@ void drawLights(Model lightCube, std::vector<glm::mat4> modelMatrices) {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(projection));
     
     uniformLocation = glGetUniformLocation(lightCube.shader->program, "viewerPos");
-    glUniform3f(uniformLocation, camera.position[0], camera.position[1], camera.position[2]);
+    glUniform3f(uniformLocation, camera.position.x, camera.position.y, camera.position.z);
     for (int i = 0; i < modelMatrices.size(); ++i) {
         lightCube.drawWith(glm::value_ptr(modelMatrices[i]));
     }
@@ -130,7 +134,7 @@ void setupCoordsSystemUniforms(GLuint shaderProgram) {
 
 }
 
-void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> lightModelMatrices, Light light) {
+void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> lightModelMatrices, Light pointLights[]) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -140,7 +144,9 @@ void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> l
         models[i].shader->use();
         
         setupCoordsSystemUniforms(models[i].shader->program);
-        light.attachTo(models[i].shader->program);
+        for (int j = 0; j < POINT_LIGHTS_COUNT; ++j) {
+            pointLights[j].attachTo(models[i].shader->program, j);
+        }
         
         models[i].draw();
     }
@@ -212,14 +218,14 @@ int main(int argc, const char * argv[]) {
     cube.setModelMatrix(glm::value_ptr(justModel));
     models.push_back(cube);
     
-    Model lightCube = Model::createCube(&lightShader);
-    glm::mat4 lightModel;
-    lightModel = glm::translate(lightModel, lightPos);
-    lightModel = glm::scale(lightModel, glm::vec3(0.2f));
     std::vector<glm::mat4> lightModelMatrices;
-    lightModelMatrices.push_back(lightModel);
-    
-    Light light(lightPos, glm::vec3(1.0f, 1.0f, 1.0f));
+    Model lightCube = Model::createCube(&lightShader);
+    for (int i = 0; i < POINT_LIGHTS_COUNT; ++i) {
+        glm::mat4 lightModel;
+        lightModel = glm::translate(lightModel, pointLights[i].position);
+        lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+        lightModelMatrices.push_back(lightModel);
+    }
     
     while(!glfwWindowShouldClose(window)) {
         GLfloat currentFrame = glfwGetTime();
@@ -228,7 +234,7 @@ int main(int argc, const char * argv[]) {
         glfwPollEvents();
         glPolygonMode(GL_FRONT_AND_BACK, polygonMode ? GL_LINE : GL_FILL);
         do_movement();
-        render(models, lightCube, lightModelMatrices, light);
+        render(models, lightCube, lightModelMatrices, pointLights);
         glfwSwapBuffers(window);
     }
     
