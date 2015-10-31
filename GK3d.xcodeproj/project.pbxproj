@@ -14,6 +14,7 @@
 		40895FCD1BD8232600907A4A /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */; };
 		40895FD11BD8251F00907A4A /* libglfw3.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */; };
 		40A107C41BDB863B000CFA11 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40A107C21BDB863B000CFA11 /* shader.cpp */; settings = {ASSET_TAGS = (); }; };
+		40B52E841BE4D08A00639472 /* light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40B52E821BE4D08A00639472 /* light.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +45,8 @@
 		40A107C31BDB863B000CFA11 /* shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		40A107C71BDB956B000CFA11 /* objectShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = objectShader.frag; sourceTree = "<group>"; };
 		40A107C81BDB956B000CFA11 /* objectShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = objectShader.vert; sourceTree = "<group>"; };
+		40B52E821BE4D08A00639472 /* light.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = light.cpp; sourceTree = "<group>"; };
+		40B52E831BE4D08A00639472 /* light.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = light.hpp; sourceTree = "<group>"; };
 		40EE08601BE290BD00A4C3FE /* material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = material.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,6 +94,8 @@
 				401F7E611BDE7A9C0011F771 /* model.hpp */,
 				40EE08601BE290BD00A4C3FE /* material.hpp */,
 				409A43461BE380E2005221F9 /* vertex.hpp */,
+				40B52E821BE4D08A00639472 /* light.cpp */,
+				40B52E831BE4D08A00639472 /* light.hpp */,
 			);
 			path = GK3d;
 			sourceTree = "<group>";
@@ -166,6 +171,7 @@
 				40A107C41BDB863B000CFA11 /* shader.cpp in Sources */,
 				407B75911BDC152700DB5A72 /* camera.cpp in Sources */,
 				40895FC41BD821A400907A4A /* main.cpp in Sources */,
+				40B52E841BE4D08A00639472 /* light.cpp in Sources */,
 				401F7E621BDE7A9C0011F771 /* model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

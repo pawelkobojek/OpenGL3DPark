@@ -8,8 +8,8 @@
 
 #include "model.hpp"
 
-Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader)
-: vertices(vertices), indices(indices), material(material), shader(shader) {
+Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader)
+: vertices(vertices), indices(indices), color(color), material(material), shader(shader) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -26,7 +26,7 @@ Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) 0);
     
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat), (GLvoid*) offsetof(Vertex, normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, normal));
     
     glBindVertexArray(0);
     
@@ -34,8 +34,8 @@ Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material
     glDeleteBuffers(1, &VBO);
 }
 
-Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader,
-             GLfloat* modelMatrixValuePtr) : Model::Model(vertices, indices, material, shader) {
+Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader,
+             GLfloat* modelMatrixValuePtr) : Model::Model(vertices, indices, color, material, shader) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
 }
 
@@ -52,13 +52,7 @@ void Model::draw() {
 void Model::drawWith(GLfloat *modelMatrixValuePtr) {
     GLuint uniformLocation = glGetUniformLocation(shader->program, "model");
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, modelMatrixValuePtr);
-    glUniform3f(glGetUniformLocation(shader->program, "material.ambient"), material.ambient.x, material.ambient.y,
-                material.ambient.z);
-    glUniform3f(glGetUniformLocation(shader->program, "material.diffuse"), material.diffuse.x, material.diffuse.y,
-                material.diffuse.z);;
-    glUniform3f(glGetUniformLocation(shader->program, "material.specular"),  material.specular.x, material.specular.y,
-                material.specular.z);
-    glUniform1f(glGetUniformLocation(shader->program, "material.shininess"), material.shininess);
+    glUniform3f(glGetUniformLocation(shader->program, "objectColor"), color.x, color.y, color.z);
     
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, 0);
@@ -117,7 +111,7 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
     
     Material material = Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f),
                                  glm::vec3(0.633f, 0.727811f, 0.633f), 0.6f * 128.0f);
-    return Model(groundVertices, groundIndices, material, shader);
+    return Model(groundVertices, groundIndices, glm::vec3(0.1f, 0.8f, 0.1f), material, shader);
 }
 
 Model Model::createCube(Shader* shader) {
@@ -181,5 +175,5 @@ Model Model::createCube(Shader* shader) {
     
     Material material = Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f),
                                  glm::vec3(0.633f, 0.727811f, 0.633f), 0.6f * 128.0f);
-    return Model(vertices, indices, material, shader);
+    return Model(vertices, indices, glm::vec3(1.0f, 0.5f, 0.31f), material, shader);
 }

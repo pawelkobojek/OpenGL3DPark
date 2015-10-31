@@ -14,7 +14,6 @@
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.hpp"
@@ -26,16 +25,17 @@
 
 class Model {
 private:
-    std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
     GLuint VAO, VBO, EBO;
     GLfloat* modelMatrixValuePtr;
+    glm::vec3 color;
 public:
     Shader* shader;
     Material material;
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
     
-    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader);
-    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader,
+    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader);
+    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader,
           GLfloat* modelMatrixValuePtr);
     ~Model();
 
