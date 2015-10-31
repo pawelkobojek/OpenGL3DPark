@@ -21,7 +21,7 @@
 #include "vertex.hpp"
 
 #define MESH_COUNT 100
-#define MAX_HILL_HEIGHT 0.0f
+#define MAX_HILL_HEIGHT 0.005f
 
 class Model {
 private:

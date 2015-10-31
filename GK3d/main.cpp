@@ -38,7 +38,7 @@ GLfloat lastY = HEIGHT / 2;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(1.2f, 0.5f, 2.0f);
 
 bool polygonMode = false;
 
@@ -200,13 +200,15 @@ int main(int argc, const char * argv[]) {
     
     std::vector<Model> models;
     
-//    Model ground = Model::createGround(&shader);
-//    glm::mat4 model;
-//    ground.setModelMatrix(glm::value_ptr(model));
-//    models.push_back(ground);
+    Model ground = Model::createGround(&shader);
+    glm::mat4 model;
+    model = glm::scale(model, glm::vec3(20.0f));
+    ground.setModelMatrix(glm::value_ptr(model));
+    models.push_back(ground);
     
     Model cube = Model::createCube(&shader);
     glm::mat4 justModel;
+    justModel = glm::translate(justModel, glm::vec3(0.0f, 2.0f, 0.0f));
     cube.setModelMatrix(glm::value_ptr(justModel));
     models.push_back(cube);
     

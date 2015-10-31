@@ -97,7 +97,7 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
     for (int i = 0; i < groundIndices.size(); i += 3) {
         glm::vec3 v[] = { groundVertices[groundIndices[i]].position, groundVertices[groundIndices[i+1]].position,
                            groundVertices[groundIndices[i+2]].position };
-        glm::vec3 norm = glm::cross(v[1] - v[0], v[2] - v[0]);
+        glm::vec3 norm = glm::cross(v[2] - v[0], v[1] - v[0]);
         
         groundVertices[groundIndices[i]].normal += norm;
         groundVertices[groundIndices[i+1]].normal += norm;
