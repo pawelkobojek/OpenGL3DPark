@@ -8,28 +8,33 @@
 
 #include "model.hpp"
 
-Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, Material material, Shader* shader)
+Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader)
 : vertices(vertices), indices(indices), material(material), shader(shader) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
     
     glBindVertexArray(VAO);
+    
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+    
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLint), indices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) 0);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+    
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GLfloat)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) 0);
+    
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat), (GLvoid*) offsetof(Vertex, normal));
+    
     glBindVertexArray(0);
     
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
 }
 
-Model::Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, Material material, Shader* shader,
+Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader,
              GLfloat* modelMatrixValuePtr) : Model::Model(vertices, indices, material, shader) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
 }
@@ -50,9 +55,9 @@ void Model::drawWith(GLfloat *modelMatrixValuePtr) {
     glUniform3f(glGetUniformLocation(shader->program, "material.ambient"), material.ambient.x, material.ambient.y,
                 material.ambient.z);
     glUniform3f(glGetUniformLocation(shader->program, "material.diffuse"), material.diffuse.x, material.diffuse.y,
-                material.diffuse.z);//1.0f, 0.5f, 0.31f);
+                material.diffuse.z);;
     glUniform3f(glGetUniformLocation(shader->program, "material.specular"),  material.specular.x, material.specular.y,
-                material.specular.z);//0.5f, 0.5f, 0.5f);
+                material.specular.z);
     glUniform1f(glGetUniformLocation(shader->program, "material.shininess"), material.shininess);
     
     glBindVertexArray(this->VAO);
@@ -64,12 +69,8 @@ void Model::setModelMatrix(GLfloat* modelMatrixValuePtr) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
 }
 
-void Model::setLightColor(glm::vec3 lightColor) {
-    this->lightColor = lightColor;
-}
-
 Model Model::createGround(Shader* shader, const int meshCount, const GLfloat maxHillHeight) {
-    std::vector<glm::vec3> groundVertices;
+    std::vector<Vertex> groundVertices;
     std::vector<GLuint> groundIndices;
     
     float from = -1.0f;
@@ -80,7 +81,10 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
             float x = (i * diff / meshCount) + from;
             float z = (j * diff / meshCount) + from;
             float y = (float) rand() / (float) RAND_MAX;
-            groundVertices.push_back(glm::vec3(x, y * maxHillHeight, z));
+            
+            Vertex v;
+            v.position = glm::vec3(x, y * maxHillHeight, z);
+            groundVertices.push_back(v);
         }
     }
     
@@ -94,6 +98,21 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
             groundIndices.push_back((i + 1) * (meshCount + 1) + j);
             groundIndices.push_back((i + 1) * (meshCount + 1) + j + 1);
         }
+    }
+    
+    for (int i = 0; i < groundIndices.size(); i += 3) {
+        glm::vec3 v[] = { groundVertices[groundIndices[i]].position, groundVertices[groundIndices[i+1]].position,
+                           groundVertices[groundIndices[i+2]].position };
+        glm::vec3 norm = glm::cross(v[1] - v[0], v[2] - v[0]);
+        
+        groundVertices[groundIndices[i]].normal += norm;
+        groundVertices[groundIndices[i+1]].normal += norm;
+        groundVertices[groundIndices[i+2]].normal += norm;
+        
+    }
+    
+    for (int i = 0; i < groundVertices.size(); ++i) {
+        groundVertices[i].normal = glm::normalize(groundVertices[i].normal);
     }
     
     Material material = Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f),
@@ -146,15 +165,15 @@ Model Model::createCube(Shader* shader) {
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
     
-    std::vector<glm::vec3> vertices;
+    std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
 
     int j = 0;
     for (int i = 0; i < 36*6; i+=6) {
-        glm::vec3 vert(cubeVerts[i], cubeVerts[i+1], cubeVerts[i+2]);
-        glm::vec3 normal(cubeVerts[i+3], cubeVerts[i+4], cubeVerts[i+5]);
-        vertices.push_back(vert);
-        vertices.push_back(normal);
+        Vertex v;
+        v.position = glm::vec3(cubeVerts[i], cubeVerts[i+1], cubeVerts[i+2]);
+        v.normal = glm::vec3(cubeVerts[i+3], cubeVerts[i+4], cubeVerts[i+5]);
+        vertices.push_back(v);
         indices.push_back(j++);
         indices.push_back(j++);
         indices.push_back(j++);

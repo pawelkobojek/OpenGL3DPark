@@ -39,7 +39,7 @@ struct SpotLight {
     vec3 specular;
 };
 
-#define POINT_LIGHTS_COUNT 4
+#define POINT_LIGHTS_COUNT 1
 #define SHININESS 256
 
 uniform PointLight pointLights[POINT_LIGHTS_COUNT];
@@ -105,7 +105,7 @@ void main() {
         result += calcPointLight(pointLights[i], norm, fragPos, viewDir);
     }
     
-    result += calcSpotLight(spotLight, norm, fragPos, viewDir);
+//    result += calcSpotLight(spotLight, norm, fragPos, viewDir);
     
     color = vec4(result, 1.0f);
 }

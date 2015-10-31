@@ -19,23 +19,23 @@
 
 #include "shader.hpp"
 #include "material.hpp"
+#include "vertex.hpp"
 
 #define MESH_COUNT 100
-#define MAX_HILL_HEIGHT 0.01f
+#define MAX_HILL_HEIGHT 0.0f
 
 class Model {
 private:
-    std::vector<glm::vec3> vertices;
+    std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
     GLuint VAO, VBO, EBO;
     GLfloat* modelMatrixValuePtr;
-    glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 public:
     Shader* shader;
     Material material;
     
-    Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, Material material, Shader* shader);
-    Model(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, Material material, Shader* shader,
+    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader);
+    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, Material material, Shader* shader,
           GLfloat* modelMatrixValuePtr);
     ~Model();
 
