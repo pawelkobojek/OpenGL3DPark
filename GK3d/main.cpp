@@ -21,6 +21,7 @@
 #include "camera.hpp"
 #include "model.hpp"
 #include "light.hpp"
+#include "SpotLight.hpp"
 
 const GLuint WIDTH = 800, HEIGHT = 600;
 const int POINT_LIGHTS_COUNT = 2;
@@ -45,6 +46,7 @@ Light pointLights[] = {
 };
 
 bool polygonMode = false;
+bool flashLight = true;
 
 void do_movement() {
     if(keys[GLFW_KEY_W]) {
@@ -74,6 +76,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
     if(key == GLFW_KEY_TAB && action == GLFW_PRESS) {
         polygonMode = !polygonMode;
+    }
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+        flashLight = !flashLight;
     }
     if(key >= 0 && key < 1024) {
         if(action == GLFW_PRESS) {
@@ -134,7 +139,8 @@ void setupCoordsSystemUniforms(GLuint shaderProgram) {
 
 }
 
-void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> lightModelMatrices, Light pointLights[]) {
+void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> lightModelMatrices, Light pointLights[],
+            SpotLight spotLight) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -149,6 +155,10 @@ void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> l
         for (int j = 0; j < POINT_LIGHTS_COUNT; ++j) {
             pointLights[j].attachTo(models[i].shader->program, j);
         }
+        spotLight.setStrength(flashLight ? 1.0f : 0.0f);
+        spotLight.setPosition(camera.position);
+        spotLight.direction = camera.front;
+        spotLight.attachTo(models[i].shader->program, 0);
         
         models[i].draw();
     }
@@ -229,6 +239,9 @@ int main(int argc, const char * argv[]) {
         lightModelMatrices.push_back(lightModel);
     }
     
+    SpotLight flashLight(camera.position, camera.front, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)),
+                         1.0f, 0.09, 0.032);
+    
     while(!glfwWindowShouldClose(window)) {
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -236,7 +249,7 @@ int main(int argc, const char * argv[]) {
         glfwPollEvents();
         glPolygonMode(GL_FRONT_AND_BACK, polygonMode ? GL_LINE : GL_FILL);
         do_movement();
-        render(models, lightCube, lightModelMatrices, pointLights);
+        render(models, lightCube, lightModelMatrices, pointLights, flashLight);
         glfwSwapBuffers(window);
     }
     
