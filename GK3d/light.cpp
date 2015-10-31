@@ -22,5 +22,5 @@ void Light::attachTo(GLuint program, int index) {
     std::string col = uniformName + std::string("color");
     
     glUniform3f(glGetUniformLocation(program, pos.data()), position.x, position.y, position.z);
-    glUniform3f(glGetUniformLocation(program, col.data()), color.x, color.y, color.z);
+    glUniform3f(glGetUniformLocation(program, col.data()), strength * color.x, strength * color.y, strength * color.z);
 }

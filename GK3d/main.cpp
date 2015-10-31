@@ -138,6 +138,8 @@ void render(std::vector<Model> models, Model lightCube, std::vector<glm::mat4> l
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    pointLights[0].strength = fabs(sin(glfwGetTime()));
+    
     drawLights(lightCube, lightModelMatrices);
     
     for (int i = 0; i < models.size(); ++i) {

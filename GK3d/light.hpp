@@ -17,6 +17,7 @@ class Light {
 public:
     glm::vec3 position;
     glm::vec3 color;
+    GLfloat strength = 1.0f;
     
     Light(glm::vec3 position, glm::vec3 color = glm::vec3(1.0f));
     
