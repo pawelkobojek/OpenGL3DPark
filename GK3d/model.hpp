@@ -17,7 +17,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.hpp"
-#include "material.hpp"
+#include "mesh.hpp"
 #include "vertex.hpp"
 
 #define MESH_COUNT 100
@@ -25,19 +25,15 @@
 
 class Model {
 private:
-    GLuint VAO, VBO, EBO;
     GLfloat* modelMatrixValuePtr;
     glm::vec3 color;
 public:
     Shader* shader;
-    Material material;
-    std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
+    std::vector<Mesh> meshes;
     
-    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader);
-    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
+    Model(std::vector<Mesh> meshes, glm::vec3 color, Shader* shader);
+    Model(std::vector<Mesh> meshes, glm::vec3 color, Shader* shader,
           GLfloat* modelMatrixValuePtr);
-    ~Model();
 
     void setModelMatrix(GLfloat* modelMatrixValuePtr);
     void setLightColor(glm::vec3 lightColor);

@@ -8,41 +8,14 @@
 
 #include "model.hpp"
 
-Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader)
-: vertices(vertices), indices(indices), color(color), shader(shader) {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    
-    glBindVertexArray(VAO);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) 0);
-    
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, normal));
-    
-    glBindVertexArray(0);
-    
-    glDeleteBuffers(1, &EBO);
-    glDeleteBuffers(1, &VBO);
+Model::Model(std::vector<Mesh> meshes, glm::vec3 color, Shader* shader)
+: meshes(meshes), color(color), shader(shader) {
+
 }
 
-Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
-             GLfloat* modelMatrixValuePtr) : Model::Model(vertices, indices, color, shader) {
+Model::Model(std::vector<Mesh> meshes, glm::vec3 color, Shader* shader,
+             GLfloat* modelMatrixValuePtr) : Model::Model(meshes, color, shader) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
-}
-
-Model::~Model() {
-//    glDeleteBuffers(1, &EBO);
-//    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &VAO);
 }
 
 void Model::draw() {
@@ -54,9 +27,9 @@ void Model::drawWith(GLfloat *modelMatrixValuePtr) {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, modelMatrixValuePtr);
     glUniform3f(glGetUniformLocation(shader->program, "objectColor"), color.x, color.y, color.z);
     
-    glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    for (int i = 0; i < meshes.size(); ++i) {
+        meshes[i].draw(shader);
+    }
 }
 
 void Model::setModelMatrix(GLfloat* modelMatrixValuePtr) {
@@ -109,7 +82,9 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
         groundVertices[i].normal = glm::normalize(groundVertices[i].normal);
     }
     
-    return Model(groundVertices, groundIndices, glm::vec3(0.1f, 0.8f, 0.1f), shader);
+    std::vector<Mesh> meshes;
+    meshes.push_back(Mesh(groundVertices, groundIndices));
+    return Model(meshes, glm::vec3(0.1f, 0.8f, 0.1f), shader);
 }
 
 Model Model::createCube(Shader* shader) {
@@ -171,5 +146,7 @@ Model Model::createCube(Shader* shader) {
         indices.push_back(j++);
     }
     
-    return Model(vertices, indices, glm::vec3(1.0f, 0.5f, 0.31f), shader);
+    std::vector<Mesh> meshes;
+    meshes.push_back(Mesh(vertices, indices));
+    return Model(meshes, glm::vec3(1.0f, 0.5f, 0.31f), shader);
 }
