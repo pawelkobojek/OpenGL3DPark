@@ -40,8 +40,8 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 Light pointLights[] = {
-    Light(glm::vec3(1.2f, 0.5f, 2.0f)),
-    Light(glm::vec3(-1.2f, 0.5f, -2.0f))
+    Light(glm::vec3(1.2f, 0.5f, 2.0f), 1.0f, 0.09, 0.032),
+    Light(glm::vec3(-1.2f, 0.5f, -2.0f), 1.0f, 0.09, 0.032)
 };
 
 bool polygonMode = false;
