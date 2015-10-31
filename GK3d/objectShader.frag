@@ -80,7 +80,7 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     
     float attenuation = calcAttenuation(light.position, light.constant, light.linear, light.quadratic, fragPos);
     
-    return light.color * ((specular + diffuse) * intensity * attenuation);
+    return light.color * ((specular + diffuse) * intensity * attenuation) * objectColor; // * objectColor or not?
 }
 
 vec3 calcAmbient(vec3 lightColor, float strentgh) {
