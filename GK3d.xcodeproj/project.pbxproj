@@ -17,6 +17,7 @@
 		40B52E841BE4D08A00639472 /* light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40B52E821BE4D08A00639472 /* light.cpp */; settings = {ASSET_TAGS = (); }; };
 		40B52E871BE4FAD300639472 /* SpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40B52E851BE4FAD300639472 /* SpotLight.cpp */; settings = {ASSET_TAGS = (); }; };
 		40B52E8E1BE54B9B00639472 /* mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40B52E8C1BE54B9B00639472 /* mesh.cpp */; settings = {ASSET_TAGS = (); }; };
+		40B52E901BE5546400639472 /* libassimp.3.1.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B52E8F1BE5546400639472 /* libassimp.3.1.1.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +54,7 @@
 		40B52E861BE4FAD300639472 /* SpotLight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpotLight.hpp; sourceTree = "<group>"; };
 		40B52E8C1BE54B9B00639472 /* mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mesh.cpp; sourceTree = "<group>"; };
 		40B52E8D1BE54B9B00639472 /* mesh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mesh.hpp; sourceTree = "<group>"; };
+		40B52E8F1BE5546400639472 /* libassimp.3.1.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.3.1.1.dylib; path = ../../../../../usr/local/Cellar/assimp/3.1.1/lib/libassimp.3.1.1.dylib; sourceTree = "<group>"; };
 		40EE08601BE290BD00A4C3FE /* material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = material.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40B52E901BE5546400639472 /* libassimp.3.1.1.dylib in Frameworks */,
 				40895FD11BD8251F00907A4A /* libglfw3.3.1.dylib in Frameworks */,
 				40895FCD1BD8232600907A4A /* libGLEW.1.12.0.dylib in Frameworks */,
 				40895FCB1BD8228200907A4A /* OpenGL.framework in Frameworks */,
@@ -73,6 +76,7 @@
 		40895FB71BD821A400907A4A = {
 			isa = PBXGroup;
 			children = (
+				40B52E8F1BE5546400639472 /* libassimp.3.1.1.dylib */,
 				40895FD01BD8251F00907A4A /* libglfw3.3.1.dylib */,
 				40895FCC1BD8232600907A4A /* libGLEW.1.12.0.dylib */,
 				40895FCA1BD8228200907A4A /* OpenGL.framework */,
@@ -282,6 +286,7 @@
 					/usr/local/lib,
 					/opt/local/lib,
 					/usr/local/Cellar/glfw3/3.1.1/lib,
+					/usr/local/Cellar/assimp/3.1.1/lib,
 				);
 				OTHER_LDFLAGS = "-lGLEW";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -302,6 +307,7 @@
 					/usr/local/lib,
 					/opt/local/lib,
 					/usr/local/Cellar/glfw3/3.1.1/lib,
+					/usr/local/Cellar/assimp/3.1.1/lib,
 				);
 				OTHER_LDFLAGS = "-lGLEW";
 				PRODUCT_NAME = "$(TARGET_NAME)";

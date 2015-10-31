@@ -41,8 +41,8 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 Light pointLights[] = {
-    Light(glm::vec3(1.2f, 0.5f, 2.0f), 1.0f, 0.09, 0.032),
-    Light(glm::vec3(-1.2f, 0.5f, -2.0f), 1.0f, 0.09, 0.032)
+    Light(glm::vec3(2.5f, 0.75f, 0.0f), 1.0f, 0.09, 0.032),
+    Light(glm::vec3(0.0f, 0.75f, 3.5f), 1.0f, 0.09, 0.032)
 };
 
 bool polygonMode = false;
@@ -230,14 +230,29 @@ int main(int argc, const char * argv[]) {
     cube.setModelMatrix(glm::value_ptr(justModel));
     models.push_back(cube);
     
+    Model lantern = Model::fromFile(std::string("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/lamp-post-ready.3DS"),
+                                          glm::vec3(0.8f, 0.8f, 0.8f), &shader);
+    glm::mat4 mm;
+    
+    glm::vec3 lanternPos[] = {
+        glm::vec3(pointLights[0].position.x, pointLights[0].position.y * 2.0f, pointLights[0].position.z),
+        glm::vec3(pointLights[1].position.x, pointLights[1].position.y * 2.0f, pointLights[1].position.z),
+    };
     std::vector<glm::mat4> lightModelMatrices;
-    Model lightCube = Model::createCube(&lightShader);
     for (int i = 0; i < POINT_LIGHTS_COUNT; ++i) {
         glm::mat4 lightModel;
-        lightModel = glm::translate(lightModel, pointLights[i].position);
-        lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+        lightModel = glm::translate(lightModel, lanternPos[i]);
+        lightModel = glm::scale(lightModel, glm::vec3(0.02f));
         lightModelMatrices.push_back(lightModel);
     }
+    
+    Model bench = Model::fromFile(std::string("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/bench.3ds"), glm::vec3(0.65f, 0.2f, 0.2f), &shader);
+    glm::mat4 m2;
+    m2 = glm::translate(m2, glm::vec3(0.0f, 0.1f, 0.0f));
+    m2 = glm::rotate(m2, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    m2 = glm::scale(m2, glm::vec3(0.002f));
+    bench.setModelMatrix(glm::value_ptr(m2));
+    models.push_back(bench);
     
     SpotLight flashLight(camera.position, camera.front, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)),
                          1.0f, 0.09, 0.032);
@@ -249,7 +264,7 @@ int main(int argc, const char * argv[]) {
         glfwPollEvents();
         glPolygonMode(GL_FRONT_AND_BACK, polygonMode ? GL_LINE : GL_FILL);
         do_movement();
-        render(models, lightCube, lightModelMatrices, pointLights, flashLight);
+        render(models, lantern, lightModelMatrices, pointLights, flashLight);
         glfwSwapBuffers(window);
     }
     

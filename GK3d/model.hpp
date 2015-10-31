@@ -11,10 +11,19 @@
 
 #include <stdio.h>
 #include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <map>
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include "shader.hpp"
 #include "mesh.hpp"
@@ -27,6 +36,10 @@ class Model {
 private:
     GLfloat* modelMatrixValuePtr;
     glm::vec3 color;
+    
+    std::string directory;
+    
+    Model();
 public:
     Shader* shader;
     std::vector<Mesh> meshes;
@@ -44,6 +57,11 @@ public:
     static Model createGround(Shader* shader, const int meshCount = MESH_COUNT,
                               const GLfloat maxHillHeight = MAX_HILL_HEIGHT);
     static Model createCube(Shader* shader);
+    static Model fromFile(std::string path, glm::vec3 color, Shader* shader);
+    
+    void loadModel(std::string path);
+    void processNode(aiNode* node, const aiScene* scene);
+    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 };
 
 #endif /* model_hpp */
