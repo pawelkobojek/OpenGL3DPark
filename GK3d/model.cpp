@@ -8,8 +8,8 @@
 
 #include "model.hpp"
 
-Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader)
-: vertices(vertices), indices(indices), color(color), material(material), shader(shader) {
+Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader)
+: vertices(vertices), indices(indices), color(color), shader(shader) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -34,8 +34,8 @@ Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec
     glDeleteBuffers(1, &VBO);
 }
 
-Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader,
-             GLfloat* modelMatrixValuePtr) : Model::Model(vertices, indices, color, material, shader) {
+Model::Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
+             GLfloat* modelMatrixValuePtr) : Model::Model(vertices, indices, color, shader) {
     this->modelMatrixValuePtr = modelMatrixValuePtr;
 }
 
@@ -109,9 +109,7 @@ Model Model::createGround(Shader* shader, const int meshCount, const GLfloat max
         groundVertices[i].normal = glm::normalize(groundVertices[i].normal);
     }
     
-    Material material = Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f),
-                                 glm::vec3(0.633f, 0.727811f, 0.633f), 0.6f * 128.0f);
-    return Model(groundVertices, groundIndices, glm::vec3(0.1f, 0.8f, 0.1f), material, shader);
+    return Model(groundVertices, groundIndices, glm::vec3(0.1f, 0.8f, 0.1f), shader);
 }
 
 Model Model::createCube(Shader* shader) {
@@ -173,7 +171,5 @@ Model Model::createCube(Shader* shader) {
         indices.push_back(j++);
     }
     
-    Material material = Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f),
-                                 glm::vec3(0.633f, 0.727811f, 0.633f), 0.6f * 128.0f);
-    return Model(vertices, indices, glm::vec3(1.0f, 0.5f, 0.31f), material, shader);
+    return Model(vertices, indices, glm::vec3(1.0f, 0.5f, 0.31f), shader);
 }

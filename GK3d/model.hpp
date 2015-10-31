@@ -34,8 +34,8 @@ public:
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
     
-    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader);
-    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Material material, Shader* shader,
+    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader);
+    Model(std::vector<Vertex> vertices, std::vector<GLuint> indices, glm::vec3 color, Shader* shader,
           GLfloat* modelMatrixValuePtr);
     ~Model();
 
