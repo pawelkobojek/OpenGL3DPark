@@ -41,8 +41,8 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 Light pointLights[] = {
-    Light(glm::vec3(2.5f, 0.75f, 0.0f), 1.0f, 0.09, 0.032),
-    Light(glm::vec3(0.0f, 0.75f, 3.5f), 1.0f, 0.09, 0.032)
+    Light(glm::vec3(2.5f, 1.5f, 0.0f), 1.0f, 0.09, 0.032),
+    Light(glm::vec3(0.0f, 1.5f, 3.5f), 1.0f, 0.09, 0.032)
 };
 
 bool polygonMode = false;
@@ -224,25 +224,25 @@ int main(int argc, const char * argv[]) {
     ground.setModelMatrix(glm::value_ptr(model));
     models.push_back(ground);
     
-    Model cube = Model::createCube(&shader);
-    glm::mat4 justModel;
-    justModel = glm::translate(justModel, glm::vec3(0.0f, 2.0f, 0.0f));
-    cube.setModelMatrix(glm::value_ptr(justModel));
-    models.push_back(cube);
+//    Model cube = Model::createCube(&shader);
+//    glm::mat4 justModel;
+//    justModel = glm::translate(justModel, glm::vec3(0.0f, 2.0f, 0.0f));
+//    cube.setModelMatrix(glm::value_ptr(justModel));
+//    models.push_back(cube);
     
-    Model lantern = Model::fromFile(std::string("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/lamp-post-ready.3DS"),
+    Model lantern = Model::fromFile(std::string("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/lamp.obj"),
                                           glm::vec3(0.8f, 0.8f, 0.8f), &shader);
     glm::mat4 mm;
     
     glm::vec3 lanternPos[] = {
-        glm::vec3(pointLights[0].position.x, pointLights[0].position.y * 2.0f, pointLights[0].position.z),
-        glm::vec3(pointLights[1].position.x, pointLights[1].position.y * 2.0f, pointLights[1].position.z),
+        glm::vec3(pointLights[0].position.x, 0.1f, pointLights[0].position.z),
+        glm::vec3(pointLights[1].position.x, 0.1f, pointLights[1].position.z),
     };
     std::vector<glm::mat4> lightModelMatrices;
     for (int i = 0; i < POINT_LIGHTS_COUNT; ++i) {
         glm::mat4 lightModel;
         lightModel = glm::translate(lightModel, lanternPos[i]);
-        lightModel = glm::scale(lightModel, glm::vec3(0.02f));
+        lightModel = glm::scale(lightModel, glm::vec3(0.04f));
         lightModelMatrices.push_back(lightModel);
     }
     
@@ -253,6 +253,14 @@ int main(int argc, const char * argv[]) {
     m2 = glm::scale(m2, glm::vec3(0.002f));
     bench.setModelMatrix(glm::value_ptr(m2));
     models.push_back(bench);
+    
+    Model tree = Model::fromFile("/Users/pawelkobojek/Development/grafika/GK3d/GK3d/tree.3ds", glm::vec3(0.1f, 0.9f, 0.1f), &shader);
+    glm::mat4 treeModel;
+    treeModel = glm::translate(treeModel, glm::vec3(0.7f, 0.1f, 0.0f));
+    treeModel = glm::rotate(treeModel, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    treeModel = glm::scale(treeModel, glm::vec3(0.2f));
+    tree.setModelMatrix(glm::value_ptr(treeModel));
+    models.push_back(tree);
     
     SpotLight flashLight(camera.position, camera.front, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)),
                          1.0f, 0.09, 0.032);
